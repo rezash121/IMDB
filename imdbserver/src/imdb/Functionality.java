@@ -15,72 +15,103 @@ public class Functionality {
 	private ArrayList<Film> list;
 	private DatabaseManager databasemanager;
 	private ObjectOutputStream objectOut;
-	private PrintWriter output ;
+	private PrintWriter output;
 	private Response response;
 	private User user;
-	public Functionality(Socket socket){
-		this.socket=socket;
-		user=new User();
+	private Rate rate;
+	private ArrayList<Rate> Ratelist;
+	public Functionality(Socket socket) {
+		this.socket = socket;
+		user = new User();
 		databasemanager = new DatabaseManager();
-		list=new ArrayList<>();
-		response=new Response();
+		list = new ArrayList<Film>();
+		response = new Response();
+		Ratelist =new ArrayList<Rate>();
 		try {
-			this.objectOut=new ObjectOutputStream(socket.getOutputStream());
+			this.objectOut = new ObjectOutputStream(socket.getOutputStream());
 			output = new PrintWriter(socket.getOutputStream(), true);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	public void WhatIsTheOrder(String Order){
-		try{
-		int EndOfTitle;
-		String Title;
-		System.out.println("title");
-		EndOfTitle=Order.indexOf("#");
-		Title=Order.substring(0,EndOfTitle);
-		Order=Order.substring(EndOfTitle+1,Order.length());
-		if(Title.equals("search")){
-			databasemanager.MoviesFind(Order,this.list);
-			System.out.println("here is output");
-			if(list.size()==0){
-				response.SetResult("NotFound");
+
+	public void WhatIsTheOrder(String Order) {
+		try {
+			int EndOfTitle;
+			String Title;
+			System.out.println("title");
+			EndOfTitle = Order.indexOf("#");
+			Title = Order.substring(0, EndOfTitle);
+			Order = Order.substring(EndOfTitle + 1, Order.length());
+			if (Title.equals("search")) {
+				databasemanager.MoviesFind(Order, this.list);
+				System.out.println("here is search");
+				if (list.size() == 0) {
+					response.SetResult("NotFound");
+					objectOut.writeObject(response);
+					objectOut.reset();
+					list.clear();
+				} else {
+					response.SetResult("Ready");
+					objectOut.writeObject(response);
+					objectOut.writeObject(list);
+					objectOut.reset();
+					list.clear();
+				}
+			} else if (Title.equals("signup")) {
+				String result = databasemanager.SignUp(Order);
+				response.SetResult(result);
 				objectOut.writeObject(response);
 				objectOut.reset();
-				list.clear();
-			}
-			else{
-				response.SetResult("Ready");
+			} else if (Title.equals("signin")) {
+				user = databasemanager.SignIn(Order);
+				response.SetResult(user.getTypeOfUser());
 				objectOut.writeObject(response);
-				objectOut.writeObject(list);
 				objectOut.reset();
-				list.clear();
-			}
-		}
-		else if(Title.equals("signup")){
-			String result=databasemanager.SignUp(Order);
-			response.SetResult(result);
-			objectOut.writeObject(response);
-			objectOut.reset();
-		}
-		else if(Title.equals("signin")){
-			User FindedUser=databasemanager.SignIn(Order);
-			if(FindedUser.getusername().equals("")){
-				response.SetResult("Sign in Not Completed");
-				objectOut.writeObject(response);
-				objectOut.reset();	
-			}else{
-				user=FindedUser;
-				response.SetResult("Sign in Completed");
+			} else if (Title.equals("rate")) {
+				String result = databasemanager.Rate(Order);
+				response.SetResult(result);
 				objectOut.writeObject(response);
 				objectOut.reset();
 			}
+			else if(Title.equals("showrate")){
+
+				databasemanager.ShowRates(Order, Ratelist);
+				if (Ratelist.size() == 0) {
+					response.SetResult("NotFound");
+					objectOut.writeObject(response);
+					objectOut.reset();
+					Ratelist.clear();
+				} else {
+					response.SetResult("Ready");
+					objectOut.writeObject(response);
+					objectOut.writeObject(Ratelist);
+					objectOut.reset();
+					Ratelist.clear();
+				}
+			}else if(Title.equals("RateConfirm")){
+				databasemanager.RateConfirm(Order);
+			}else if(Title.equals("ShowReviews")){
 				
-		}
+				databasemanager.ShowReviews(Order,Ratelist);
+				if (Ratelist.size() == 0) {
+					response.SetResult("NotFound");
+					objectOut.writeObject(response);
+					objectOut.reset();
+					Ratelist.clear();
+				} else {
+					response.SetResult("Ready");
+					objectOut.writeObject(response);
+					objectOut.writeObject(Ratelist);
+					objectOut.reset();
+					Ratelist.clear();
+				}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 }

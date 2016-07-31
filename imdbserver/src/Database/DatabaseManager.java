@@ -1,6 +1,7 @@
 package Database;
 
 import java.io.IOException;
+import imdb.Rate;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -24,7 +25,26 @@ public class DatabaseManager {
 		return result;
 	}
 	public User SignIn(String userEntry){
+		System.out.println(userEntry);
 		User Findeduser=json.SignIn(userEntry);
 		return Findeduser;
 	}
+	public String Rate(String FieldsOfRate){
+		String result=json.Ratejson(FieldsOfRate);
+		return result;
+	}
+	public void ShowRates(String FieldsOfSearch,ArrayList<Rate> list) {
+		System.out.println("here is query");
+		json.GiveRate(FieldsOfSearch,list);
+
+	}
+	public void RateConfirm(String ResultOfConfirm) {
+		json.RateConfirm(ResultOfConfirm);
+
+	}
+	public void ShowReviews(String FieldsOfSearch,ArrayList<Rate> list) {
+		json.ShowReviews(FieldsOfSearch,list);
+
+	}
+	
 }

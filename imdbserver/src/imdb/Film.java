@@ -1,5 +1,6 @@
 package imdb;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 
@@ -11,7 +12,7 @@ public class Film implements java.io.Serializable {
 	private String name;
 	private int year;
 	private String country;
-	private List<String> genreList;
+	private ArrayList<String> genreList;
 	private int durationMinutes;
 	private String director;
 	private String description;

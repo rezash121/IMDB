@@ -41,5 +41,8 @@ public class User {
 	public String getTypeOfUser(){
 		return this.TypeOfUser;
 	}
+	public String toString(){
+		return "username: "+username+" password: "+password+" e_mail: "+e_mail+" type: "+TypeOfUser;
+	}
 	
 }
