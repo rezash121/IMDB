@@ -31,13 +31,12 @@ public class Sign_in extends JFrame {
 	private JTextField usernametxtfld;
 
 	private String message;
-	private PrintWriter output;
-	private ObjectInputStream objectIn;
 	private Response response;
 	private JPasswordField passwordField;
-	public Sign_in(ObjectInputStream objectIn,PrintWriter output,Socket socket) {
+
+	public Sign_in(ObjectInputStream objectIn, PrintWriter output, Socket socket) {
 		setResizable(false);
-		response=new Response();
+		response = new Response();
 		setTitle("Sign in");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 353, 223);
@@ -46,55 +45,53 @@ public class Sign_in extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JLabel lblUserName = new JLabel("User name");
 		lblUserName.setFont(new Font("Georgia", Font.PLAIN, 12));
 		lblUserName.setBounds(135, 11, 73, 14);
 		contentPane.add(lblUserName);
-		
+
 		usernametxtfld = new JTextField();
 		usernametxtfld.setBounds(30, 35, 287, 20);
 		contentPane.add(usernametxtfld);
 		usernametxtfld.setColumns(10);
-		
+
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setFont(new Font("Georgia", Font.PLAIN, 12));
 		lblPassword.setBounds(139, 60, 66, 14);
 		contentPane.add(lblPassword);
-		
+
 		JButton cancelbtn = new JButton("Cancel");
 		cancelbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
-
 
 			}
 		});
 		cancelbtn.setFont(new Font("Arial", Font.BOLD, 12));
 		cancelbtn.setBounds(228, 135, 89, 23);
 		contentPane.add(cancelbtn);
-//////////////////////////////////////////////////////////////////////////////		
+		//////////////////////////////////////////////////////////////////////////////
 		JButton signupbtn = new JButton("Sign up");
 		signupbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Sign_up signupframe=new Sign_up(objectIn, output);
+				Sign_up signupframe = new Sign_up(objectIn, output);
 				signupframe.setVisible(true);
-				
-				
+
 			}
 		});
 		signupbtn.setFont(new Font("Arial", Font.BOLD, 12));
 		signupbtn.setBounds(129, 135, 89, 23);
 		contentPane.add(signupbtn);
-		
+
 		JButton signinbtn = new JButton("Sign in");
 		signinbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(usernametxtfld.getText().equals("")||passwordField.getText().equals(""))
+				if (usernametxtfld.getText().equals("") || passwordField.getText().equals(""))
 					JOptionPane.showMessageDialog(null, "please fill all of items");
-				else{
-					output.println("signin#username:"+usernametxtfld.getText()+
-							"*password:"+passwordField.getText()+"*#");
+				else {
+					output.println("signin#username:" + usernametxtfld.getText() + "*password:"
+							+ passwordField.getText() + "*#");
 				}
 				try {
 					response = (Response) objectIn.readObject();
@@ -103,21 +100,26 @@ public class Sign_in extends JFrame {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				String result=response.GetResult();
-				if(result.equals("Sign in Completed"))
-				{dispose();
-				JOptionPane.showMessageDialog(null, "Sign in Is Completed");
-				OrdinaryUserPage OUP=new OrdinaryUserPage();
-				OUP.setVisible(true);
-				}else 
-				JOptionPane.showMessageDialog(null, "Username or Password Are Incorrect");
-		
+				String result = response.GetResult();
+				if (result.equals("Ordinary")) {
+					dispose();
+					JOptionPane.showMessageDialog(null, "Sign in Is Completed");
+					OrdinaryUserPage OUP = new OrdinaryUserPage(objectIn, output, usernametxtfld.getText());
+					OUP.setVisible(true);
+				} else if(result.equals("Referee")){
+					dispose();
+					JOptionPane.showMessageDialog(null, "Sign in Is Completed");
+					RefreeFrame RF=new RefreeFrame(objectIn, output,usernametxtfld.getText());
+					RF.setVisible(true);
+				}else
+					JOptionPane.showMessageDialog(null, "Username or Password Are Incorrect");
+
 			}
 		});
 		signinbtn.setFont(new Font("Arial", Font.BOLD, 12));
 		signinbtn.setBounds(30, 135, 89, 23);
 		contentPane.add(signinbtn);
-		
+
 		passwordField = new JPasswordField();
 		passwordField.setBounds(30, 85, 287, 20);
 		contentPane.add(passwordField);
