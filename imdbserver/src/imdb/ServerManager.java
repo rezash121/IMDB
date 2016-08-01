@@ -13,8 +13,10 @@ public class ServerManager extends Thread {
 	private Socket socket;
 	private int clientNumber;
 	private int index;
+	private DatabaseType databasetype;
 
-	public ServerManager(Socket socket, int clientNumber) {
+	public ServerManager(Socket socket, int clientNumber, DatabaseType databasetype) {
+		this.databasetype = databasetype;
 		this.socket = socket;
 		this.clientNumber = clientNumber;
 		log("New connection with client# " + clientNumber + " at " + socket);
@@ -22,20 +24,26 @@ public class ServerManager extends Thread {
 
 	public void run() {
 		try {
-			Functionality function=new Functionality(socket);
+			Functionality function = new Functionality(socket);
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		//	PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-			
-			
+			// PrintWriter out = new PrintWriter(socket.getOutputStream(),
+			// true);
+
 			while (true) {
 				String input = in.readLine();
 				if (input == null || input.equals(".")) {
 					break;
 				}
-				System.out.println(input);
-				function.WhatIsTheOrder(input);
-				
-				
+				System.out.println(databasetype.getDataBaseType());
+				int EndOfTitle = input.indexOf("#");
+				String Title = input.substring(0, EndOfTitle);
+				if (Title.equals("Switch Database"))
+					databasetype.SetDataBaseType(input.substring(EndOfTitle + 1, input.length()));
+				else {
+					function.setdatabasetype(databasetype.getDataBaseType());
+					function.WhatIsTheOrder(input);
+				}
+
 			}
 
 		} catch (IOException e) {

@@ -14,7 +14,9 @@ public class DatabaseManager {
 	public DatabaseManager() {
 		json=new JsonFile();
 	}
-	
+	public void setTypeOfDatabase(String databasetype){
+		this.TypeOfDatabase=databasetype;
+	}
 	public void MoviesFind(String FieldsOfSearch,ArrayList<Film> list) {
 		System.out.println("here is query");
 		json.searchMovie(FieldsOfSearch,list);
@@ -45,6 +47,19 @@ public class DatabaseManager {
 	public void ShowReviews(String FieldsOfSearch,ArrayList<Rate> list) {
 		json.ShowReviews(FieldsOfSearch,list);
 
+	}
+	public void editmovie(String FieldsOfSearch) {
+		json.editmovie(FieldsOfSearch);
+
+	}
+	public String addmovie(String FieldsOfMovie) {
+		String result=json.addmovie(FieldsOfMovie);
+		return result;
+
+	}
+	public String AddRefree(String FieldsOfUser){
+		String result=json.AddRefree(FieldsOfUser);
+		return result;
 	}
 	
 }

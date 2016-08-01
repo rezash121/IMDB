@@ -3,6 +3,7 @@ package Database;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -391,13 +392,10 @@ public class JsonFile {
 				{
 					if(jsonrate.getFirstRefreeUsername().equals(Refreename)){
 						jsonrate.setFirstRefreeResult(Status);
-						System.out.println("that is done1");
 					}else if(jsonrate.getSecondRefreeUsername().equals(Refreename)){
 						jsonrate.setSecondRefreeResult(Status);
-						System.out.println("that is done2");
 					}else if(jsonrate.getThirdRefreeUsername().equals(Refreename)){
 						jsonrate.setThirdRefreeResult(Status);
-						System.out.println("that is done3");
 					}
 				}
 				RateList.add(jsonrate);
@@ -459,6 +457,344 @@ public class JsonFile {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	public void editmovie(String Order) {
+		Film film = new Film();
+		int EndField;
+		int EndContent;
+		int Endorder;
+		String identifier = "";
+		String fieldname;
+		String NameContent = "";
+		String YearContent = "";
+		String CountryContent = "";
+		ArrayList geners = new ArrayList<String>();
+		String MinuteContent = "";
+		String DirectorContent = "";
+		String descriptionContent="";
+		EndField = Order.indexOf(":");
+		EndContent = Order.indexOf("*");
+		Endorder = Order.indexOf("#");
+		fieldname = Order.substring(0, EndField);
+		if (fieldname.equals("identifiername")) {
+			identifier = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("name")) {
+			NameContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("year")) {
+			YearContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("country")) {
+			CountryContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("gener")) {
+			Order = Order.substring(EndField + 1, Order.length());
+			EndContent -= (EndField + 1);
+			Endorder -= (EndField + 1);
+			EndField = Order.indexOf("|");
+			int LengthOfGener = EndContent;
+			for (int i = 0; i < LengthOfGener;) {
+				geners.add(Order.substring(0, EndField));
+				EndContent -= (EndField + 1);
+				Endorder -= (EndField + 1);
+				i += EndField + 1;
+				Order = Order.substring(EndField + 1, Order.length());
+				if (i != LengthOfGener)
+					EndField = Order.indexOf("|");
+				else
+					EndField -= EndField;
+			}
+			Order = Order.substring(1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("DMinute")) {
+			MinuteContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("Director")) {
+			DirectorContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("description")) {
+			descriptionContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		film = new Film(NameContent, Integer.parseInt(YearContent), CountryContent, geners,  Integer.parseInt(MinuteContent), DirectorContent,descriptionContent);
+		System.out.println(film.toString());
+		ArrayList<Film> FilmList=new ArrayList<Film>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("G:/movies.json"));
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				Film jsonFilm = gson.fromJson(line, Film.class);
+				FilmList.add(jsonFilm);
+			}
+			File movies = new File("G:/movies.json");
+			PrintWriter cleaner = new PrintWriter(movies);
+			cleaner.print("");
+			cleaner.close();
+			BufferedWriter bwmovie = new BufferedWriter(new FileWriter(movies, true));
+			for(int i=0;i<FilmList.size();i++){
+				if(FilmList.get(i).getname().equals(identifier)){
+					bwmovie.write(gson.toJson(film));
+					bwmovie.newLine();
+				}else{
+					bwmovie.write(gson.toJson(FilmList.get(i)));
+					bwmovie.newLine();
+				}
+			}
+			bwmovie.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	public String addmovie(String Order) {
+		Film film = new Film();
+		int EndField;
+		int EndContent;
+		int Endorder;
+		String fieldname;
+		String NameContent = "";
+		String YearContent = "";
+		String CountryContent = "";
+		ArrayList geners = new ArrayList<String>();
+		String MinuteContent = "";
+		String DirectorContent = "";
+		String descriptionContent="";
+		EndField = Order.indexOf(":");
+		EndContent = Order.indexOf("*");
+		Endorder = Order.indexOf("#");
+		fieldname = Order.substring(0, EndField);
+		if (fieldname.equals("name")) {
+			NameContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("year")) {
+			YearContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("country")) {
+			CountryContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("gener")) {
+			Order = Order.substring(EndField + 1, Order.length());
+			EndContent -= (EndField + 1);
+			Endorder -= (EndField + 1);
+			EndField = Order.indexOf("|");
+			int LengthOfGener = EndContent;
+			for (int i = 0; i < LengthOfGener;) {
+				geners.add(Order.substring(0, EndField));
+				EndContent -= (EndField + 1);
+				Endorder -= (EndField + 1);
+				i += EndField + 1;
+				Order = Order.substring(EndField + 1, Order.length());
+				if (i != LengthOfGener)
+					EndField = Order.indexOf("|");
+				else
+					EndField -= EndField;
+			}
+			Order = Order.substring(1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("DMinute")) {
+			MinuteContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("Director")) {
+			DirectorContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		if (fieldname.equals("description")) {
+			descriptionContent = Order.substring(EndField + 1, EndContent);
+			Order = Order.substring(EndContent + 1, Order.length());
+			if (Endorder != EndContent + 1) {
+				Endorder -= (EndContent + 1);
+				EndField = Order.indexOf(":");
+				EndContent = Order.indexOf("*");
+				fieldname = Order.substring(0, EndField);
+			}
+		}
+		film = new Film(NameContent, Integer.parseInt(YearContent), CountryContent, geners,  Integer.parseInt(MinuteContent), DirectorContent,descriptionContent);
+		System.out.println(film.toString());
+		String result="Adding Complete";
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("G:/movies.json"));
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				Film jsonFilm = gson.fromJson(line, Film.class);
+				if(jsonFilm.getname().equals(film.getname()))
+					result="This Film was in the Database";
+					
+			}
+			if (result.equals("completed")) {
+				File file = new File("G:/movies.json");
+				BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+				System.out.println(gson.toJson(film));
+				bw.write(gson.toJson(film));
+				bw.newLine();
+				bw.close();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+	public synchronized String AddRefree(String Order) {
+		int EndField;
+		int EndContent;
+		int Endorder;
+		String username;
+		String password;
+		String e_mail;
+		EndField = Order.indexOf(":");
+		EndContent = Order.indexOf("*");
+		Endorder = Order.indexOf("#");
+		username = Order.substring(EndField + 1, EndContent);
+		Order = Order.substring(EndContent + 1, Order.length());
+		Endorder -= (EndContent + 1);
+		EndField = Order.indexOf(":");
+		EndContent = Order.indexOf("*");
+		password = Order.substring(EndField + 1, EndContent);
+		Order = Order.substring(EndContent + 1, Order.length());
+		Endorder -= (EndContent + 1);
+		EndField = Order.indexOf(":");
+		EndContent = Order.indexOf("*");
+		e_mail = Order.substring(EndField + 1, EndContent);
+		Order = Order.substring(EndContent + 1, Order.length());
+		System.out.println(username + " " + " " + password + " " + e_mail);
+		User newuser = new User(username, password, e_mail, "Refree");
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		String result = "completed";
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("G:/Users.json"));
+			User jsonuser = new User();
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				jsonuser = gson.fromJson(line, User.class);
+				if (jsonuser.getusername().equals(newuser.getusername())
+						|| (jsonuser.gete_mail().equals(newuser.gete_mail())))
+					result = "not completed";
+
+			}
+			/////////////////////////////////////////
+			if (result.equals("completed")) {
+				File file = new File("G:/Users.json");
+				BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+				System.out.println(gson.toJson(newuser));
+				bw.write(gson.toJson(newuser));
+				bw.newLine();
+				bw.close();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+
 	}
 	public boolean GenerIsExist(List<String> list, ArrayList<String> RequestedGeners) {
 		for (int i = 0; i < list.size(); i++)

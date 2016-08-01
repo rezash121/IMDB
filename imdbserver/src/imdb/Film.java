@@ -3,6 +3,7 @@ package imdb;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 
 public class Film implements java.io.Serializable {
 	/**
@@ -18,13 +19,22 @@ public class Film implements java.io.Serializable {
 	private String description;
 	
 	public Film(){
-		this.name="ali jan";
-		this.year=12312;
-		this.country="abhar";
+		this.name="";
+		this.year=0;
+		this.country="";
 		this.genreList=null;
-		this.durationMinutes=123;
-		this.director="dsa";
-		this.description="xm,c,mxncmnzxm";
+		this.durationMinutes=0;
+		this.director="";
+		this.description="";
+	}
+	public Film(String name,int year,String country,ArrayList<String> genreList,int durationMinutes,String director,String description){
+		this.name=name;
+		this.year=year;
+		this.country=country;
+		this.genreList=genreList;
+		this.durationMinutes=durationMinutes;
+		this.director=director;
+		this.description=description;
 	}
 	
 	public String getname(){

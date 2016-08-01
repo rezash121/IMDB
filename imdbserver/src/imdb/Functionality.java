@@ -20,6 +20,7 @@ public class Functionality {
 	private User user;
 	private Rate rate;
 	private ArrayList<Rate> Ratelist;
+	private String databasetype;
 	public Functionality(Socket socket) {
 		this.socket = socket;
 		user = new User();
@@ -107,11 +108,26 @@ public class Functionality {
 					objectOut.reset();
 					Ratelist.clear();
 				}
+			}else if(Title.equals("editmovie")){
+				databasemanager.editmovie(Order);
+			}else if(Title.equals("addmovie")){
+				String result =	databasemanager.addmovie(Order);
+				response.SetResult(result);
+				objectOut.writeObject(response);
+				objectOut.reset();
+			} else if (Title.equals("addrefree")) {
+				String result = databasemanager.AddRefree(Order);
+				response.SetResult(result);
+				objectOut.writeObject(response);
+				objectOut.reset();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+	}
+	public void setdatabasetype(String databasetype){
+		databasemanager.setTypeOfDatabase(databasetype);
 	}
 
 }
