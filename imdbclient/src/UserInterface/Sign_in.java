@@ -111,6 +111,11 @@ public class Sign_in extends JFrame {
 					JOptionPane.showMessageDialog(null, "Sign in Is Completed");
 					RefreeFrame RF=new RefreeFrame(objectIn, output,usernametxtfld.getText());
 					RF.setVisible(true);
+				} else if(result.equals("Manager")){
+					dispose();
+					JOptionPane.showMessageDialog(null, "Sign in Is Completed");
+					MangerFrame MF=new MangerFrame(objectIn, output,usernametxtfld.getText());
+					MF.setVisible(true);
 				}else
 					JOptionPane.showMessageDialog(null, "Username or Password Are Incorrect");
 

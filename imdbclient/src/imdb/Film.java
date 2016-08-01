@@ -53,6 +53,10 @@ public class Film implements java.io.Serializable {
 		return director;
 		
 	}
+	public String getdescription(){
+		return description;
+		
+	}
 /////////////////////////////////////////////////////////////////////////////////////////
 	   public static Comparator<Film> FilmNameComparator = new Comparator<Film>() {
 		
