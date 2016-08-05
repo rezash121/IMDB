@@ -17,7 +17,8 @@ public class Rate implements java.io.Serializable {
 	private String SecondRefreeResult;
 	private String ThirdRefreeResult;
 	public Rate(String filmname,String username,String rateNumber,String title,String Discription,String FirstRefreeUsername,
-			String SecondRefreeUsername,String ThirdRefreeUsername){
+			String SecondRefreeUsername,String ThirdRefreeUsername,String FirstRefreeResult,String SecondRefreeResult,
+			String ThirdRefreeResult){
 		this.Filmname=filmname;
 		this.username=username;
 		this.rateNumber=rateNumber;
@@ -26,9 +27,9 @@ public class Rate implements java.io.Serializable {
 		this.setFirstRefreeUsername(FirstRefreeUsername);
 		this.setSecondRefreeUsername(SecondRefreeUsername);
 		this.setThirdRefreeUsername(ThirdRefreeUsername);
-		this.setFirstRefreeResult("");
-		this.setSecondRefreeResult("");
-		this.setThirdRefreeResult("");
+		this.setFirstRefreeResult(FirstRefreeResult);
+		this.setSecondRefreeResult(SecondRefreeResult);
+		this.setThirdRefreeResult(ThirdRefreeResult);
 		
 	}
 	public Rate(){
@@ -38,6 +39,21 @@ public class Rate implements java.io.Serializable {
 		this.title="";
 		this.Discription="";
 		
+	}
+	public void SetFilmName(String Filmname){
+		this.Filmname=Filmname;
+	}
+	public void SetUserName(String username){
+		this.username=username;
+	}
+	public void SetRate(String rateNumber){
+		this.rateNumber=rateNumber;
+	}
+	public void SetTitle(String title){
+		this.title=title;
+	}
+	public void SetDiscription(String Discription){
+		this.Discription=Discription;
 	}
 	public String GetFilmName(){
 		return this.Filmname;

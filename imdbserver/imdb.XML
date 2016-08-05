@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2016-08-05T19:43:35</date>
+  <millis>1470410015403</millis>
+  <sequence>0</sequence>
+  <logger>IMDB</logger>
+  <level>CONFIG</level>
+  <class>imdb.Logging</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Configuration done.</message>
+</record>
+<record>
+  <date>2016-08-05T19:44:22</date>
+  <millis>1470410062653</millis>
+  <sequence>1</sequence>
+  <logger>IMDB</logger>
+  <level>INFO</level>
+  <class>imdb.Logging</class>
+  <method>info</method>
+  <thread>12</thread>
+  <message>*Guest User* Request: signup#username:sima*password:1234*e_mail:sima@yahoo.com*#</message>
+</record>

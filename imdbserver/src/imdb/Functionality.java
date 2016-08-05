@@ -37,17 +37,19 @@ public class Functionality {
 		}
 	}
 
-	public void WhatIsTheOrder(String Order) {
+	public void WhatIsTheOrder(String Order,Logging log) {
 		try {
 			int EndOfTitle;
 			String Title;
-			System.out.println("title");
+			if(user.getusername().equals(""))
+				log.info("*Guest User* Request: "+Order);
+			else
+				log.info("Username: "+user.getusername()+" Request: "+Order);
 			EndOfTitle = Order.indexOf("#");
 			Title = Order.substring(0, EndOfTitle);
 			Order = Order.substring(EndOfTitle + 1, Order.length());
 			if (Title.equals("search")) {
 				databasemanager.MoviesFind(Order, this.list);
-				System.out.println("here is search");
 				if (list.size() == 0) {
 					response.SetResult("NotFound");
 					objectOut.writeObject(response);

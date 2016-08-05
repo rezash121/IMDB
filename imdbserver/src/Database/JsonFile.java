@@ -3,10 +3,12 @@ package Database;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +89,6 @@ public class JsonFile {
 					Endorder -= (EndField + 1);
 					i += EndField + 1;
 					Order = Order.substring(EndField + 1, Order.length());
-					System.out.println(Order);
 					if (i != LengthOfGener)
 						EndField = Order.indexOf("|");
 					else
@@ -122,8 +123,8 @@ public class JsonFile {
 				}
 			}
 			////////////////////////////////////////////////////////////////////////////////////////////
-			BufferedReader br = new BufferedReader(new FileReader("G:/movies.json"));
-			System.out.println("here is json2");
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(new FileInputStream("./movies.json"), "UTF8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				film = gson.fromJson(line, Film.class);
@@ -142,7 +143,7 @@ public class JsonFile {
 		}
 	}
 
-	public synchronized String Signup(String Order) {
+	public String Signup(String Order) {
 		int EndField;
 		int EndContent;
 		int Endorder;
@@ -164,13 +165,13 @@ public class JsonFile {
 		EndContent = Order.indexOf("*");
 		e_mail = Order.substring(EndField + 1, EndContent);
 		Order = Order.substring(EndContent + 1, Order.length());
-		System.out.println(username + " " + " " + password + " " + e_mail);
 		User newuser = new User(username, password, e_mail, "Ordinary");
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		String result = "completed";
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("G:/Users.json"));
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(new FileInputStream("./movies.json"), "UTF8"));
 			User jsonuser = new User();
 			String line = "";
 			while ((line = br.readLine()) != null) {
@@ -182,9 +183,8 @@ public class JsonFile {
 			}
 			/////////////////////////////////////////
 			if (result.equals("completed")) {
-				File file = new File("G:/Users.json");
+				File file = new File("./Users.json");
 				BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
-				System.out.println(gson.toJson(newuser));
 				bw.write(gson.toJson(newuser));
 				bw.newLine();
 				bw.close();
@@ -217,7 +217,7 @@ public class JsonFile {
 		Gson gson = builder.create();
 		User FindedUser = new User();
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("G:/Users.json"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("./Users.json"), "UTF8"));
 			User jsonuser = new User();
 			String line = "";
 			while ((line = br.readLine()) != null) {
@@ -231,11 +231,10 @@ public class JsonFile {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(FindedUser.toString());
 		return FindedUser;
 	}
 
-	public synchronized String Ratejson(String Order) {
+	public String Ratejson(String Order, Rate resultrate) {
 		int EndField;
 		int EndContent;
 		int Endorder;
@@ -272,7 +271,7 @@ public class JsonFile {
 		Order = Order.substring(EndContent + 1, Order.length());
 		ArrayList<User> listrefree = new ArrayList<User>();
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("G:/Users.json"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("./Users.json"), "UTF8"));
 			User jsonuser = new User();
 			String line = "";
 			while ((line = br.readLine()) != null) {
@@ -290,13 +289,14 @@ public class JsonFile {
 		String refree1 = listrefree.get(RandomIndex[0]).getusername();
 		String refree2 = listrefree.get(RandomIndex[1]).getusername();
 		String refree3 = listrefree.get(RandomIndex[2]).getusername();
-		Rate userrate = new Rate(FilmName, UserName, rateNumber, title, Discription, refree1, refree2, refree3);
+		Rate userrate = new Rate(FilmName, UserName, rateNumber, title, Discription, refree1, refree2, refree3, "", "",
+				"");
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		String result = "Rate Is Registerd";
 
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("G:/Rate.json"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("./Rate.json"), "UTF8"));
 			Rate jsonRate = new Rate();
 			String line = "";
 			while ((line = br.readLine()) != null) {
@@ -306,12 +306,21 @@ public class JsonFile {
 					result = "You Rated This Film Before";
 
 			}
-			System.out.println(userrate.toString());
 			/////////////////////////////////////////
 			if (result.equals("Rate Is Registerd")) {
-				File file = new File("G:/Rate.json");
+				resultrate.SetFilmName(FilmName);
+				resultrate.SetUserName(UserName);
+				resultrate.SetTitle(title);
+				resultrate.SetRate(rateNumber);
+				resultrate.SetDiscription(Discription);
+				resultrate.setFirstRefreeUsername(refree1);
+				resultrate.setSecondRefreeUsername(refree2);
+				resultrate.setThirdRefreeUsername(refree3);
+				resultrate.setFirstRefreeResult("");
+				resultrate.setSecondRefreeResult("");
+				resultrate.setThirdRefreeResult("");
+				File file = new File("./Rate.json");
 				BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
-				System.out.println(gson.toJson(userrate));
 				bw.write(gson.toJson(userrate));
 				bw.newLine();
 				bw.close();
@@ -322,7 +331,8 @@ public class JsonFile {
 		}
 		return result;
 	}
-/////////////8***************************************************************************************8
+
+	///////////// 8***************************************************************************************8
 	public void GiveRate(String Order, ArrayList<Rate> list) {
 		try {
 			int EndField;
@@ -333,11 +343,10 @@ public class JsonFile {
 			EndContent = Order.indexOf("*");
 			Endorder = Order.indexOf("#");
 			RefreeName = Order.substring(EndField + 1, EndContent);
-			BufferedReader br = new BufferedReader(new FileReader("G:/Rate.json"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("./Rate.json"), "UTF8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				Rate jsonrate = gson.fromJson(line, Rate.class);
-				System.out.println(jsonrate.toString());
 				if ((jsonrate.getFirstRefreeUsername().equals(RefreeName) && jsonrate.getFirstRefreeResult().equals(""))
 						|| (jsonrate.getSecondRefreeUsername().equals(RefreeName)
 								&& jsonrate.getSecondRefreeResult().equals(""))
@@ -349,7 +358,8 @@ public class JsonFile {
 			e.printStackTrace();
 		}
 	}
-	public synchronized void RateConfirm(String Order){
+
+	public void RateConfirm(String Order) {
 		int EndField;
 		int EndContent;
 		int Endorder;
@@ -357,7 +367,7 @@ public class JsonFile {
 		String FilmName;
 		String Refreename;
 		String Status;
-		
+
 		EndField = Order.indexOf(":");
 		EndContent = Order.indexOf("*");
 		Endorder = Order.indexOf("#");
@@ -378,64 +388,63 @@ public class JsonFile {
 		EndContent = Order.indexOf("*");
 		Status = Order.substring(EndField + 1, EndContent);
 		Order = Order.substring(EndContent + 1, Order.length());
-		ArrayList<Rate> RateList=new ArrayList<Rate>();
-		System.out.println("hi "+Refreename);
+		ArrayList<Rate> RateList = new ArrayList<Rate>();
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("G:/Rate.json"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("./Rate.json"), "UTF8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				Rate jsonrate = gson.fromJson(line, Rate.class);
-				System.out.println(jsonrate.getFirstRefreeUsername());
-				System.out.println(jsonrate.getSecondRefreeUsername());
-				System.out.println(jsonrate.getThirdRefreeUsername());
-				if(jsonrate.GetFilmName().equals(FilmName)&&jsonrate.GetUserName().equals(UserName))
-				{
-					if(jsonrate.getFirstRefreeUsername().equals(Refreename)){
+				if (jsonrate.GetFilmName().equals(FilmName) && jsonrate.GetUserName().equals(UserName)) {
+					if (jsonrate.getFirstRefreeUsername().equals(Refreename)) {
 						jsonrate.setFirstRefreeResult(Status);
-					}else if(jsonrate.getSecondRefreeUsername().equals(Refreename)){
+					} else if (jsonrate.getSecondRefreeUsername().equals(Refreename)) {
 						jsonrate.setSecondRefreeResult(Status);
-					}else if(jsonrate.getThirdRefreeUsername().equals(Refreename)){
+					} else if (jsonrate.getThirdRefreeUsername().equals(Refreename)) {
 						jsonrate.setThirdRefreeResult(Status);
 					}
 				}
 				RateList.add(jsonrate);
-				}
-				for(int i=0;i<RateList.size();i++)
-				System.out.println(RateList.get(i).toString());
-				File rate = new File("G:/Rate.json");
-				rate.delete();
-				rate.createNewFile();
-				BufferedWriter bwrate = new BufferedWriter(new FileWriter(rate, true));
-				File reviw = new File("G:/Review.json");
-				BufferedWriter bwreview = new BufferedWriter(new FileWriter(reviw, true));
-				PrintWriter cleaner = new PrintWriter(rate);
-				cleaner.print("");
-				cleaner.close();
-				for(int i=0;i<RateList.size();i++){
-					if((RateList.get(i).getFirstRefreeResult().equals("Accept")&&RateList.get(i).getSecondRefreeResult().equals("Accept"))
-							||(RateList.get(i).getFirstRefreeResult().equals("Accept")&&RateList.get(i).getThirdRefreeResult().equals("Accept"))
-							||(RateList.get(i).getSecondRefreeResult().equals("Accept")&&RateList.get(i).getThirdRefreeResult().equals("Accept"))){
-						bwrate.write(gson.toJson(RateList.get(i)));
-						bwrate.newLine();
-					}else if((RateList.get(i).getFirstRefreeResult().equals("Reject")&&RateList.get(i).getSecondRefreeResult().equals("Reject"))
-							||(RateList.get(i).getFirstRefreeResult().equals("Reject")&&RateList.get(i).getThirdRefreeResult().equals("Reject"))
-							||(RateList.get(i).getSecondRefreeResult().equals("Reject")&&RateList.get(i).getThirdRefreeResult().equals("Reject"))){
-						
-					}
-					else{
-						bwreview.write(gson.toJson(RateList.get(i)));
-						bwreview.newLine();
-					}
 			}
-				bwrate.close();
-				bwreview.close();
+			File rate = new File("./Rate.json");
+			rate.delete();
+			rate.createNewFile();
+			BufferedWriter bwrate = new BufferedWriter(new FileWriter(rate, true));
+			File reviw = new File("./Review.json");
+			BufferedWriter bwreview = new BufferedWriter(new FileWriter(reviw, true));
+			PrintWriter cleaner = new PrintWriter(rate);
+			cleaner.print("");
+			cleaner.close();
+			for (int i = 0; i < RateList.size(); i++) {
+				if ((RateList.get(i).getFirstRefreeResult().equals("Accept")
+						&& RateList.get(i).getSecondRefreeResult().equals("Accept"))
+						|| (RateList.get(i).getFirstRefreeResult().equals("Accept")
+								&& RateList.get(i).getThirdRefreeResult().equals("Accept"))
+						|| (RateList.get(i).getSecondRefreeResult().equals("Accept")
+								&& RateList.get(i).getThirdRefreeResult().equals("Accept"))) {
+					bwrate.write(gson.toJson(RateList.get(i)));
+					bwrate.newLine();
+				} else if ((RateList.get(i).getFirstRefreeResult().equals("Reject")
+						&& RateList.get(i).getSecondRefreeResult().equals("Reject"))
+						|| (RateList.get(i).getFirstRefreeResult().equals("Reject")
+								&& RateList.get(i).getThirdRefreeResult().equals("Reject"))
+						|| (RateList.get(i).getSecondRefreeResult().equals("Reject")
+								&& RateList.get(i).getThirdRefreeResult().equals("Reject"))) {
+
+				} else {
+					bwreview.write(gson.toJson(RateList.get(i)));
+					bwreview.newLine();
+				}
+			}
+			bwrate.close();
+			bwreview.close();
 		} catch (JsonSyntaxException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
+
 	public void ShowReviews(String Order, ArrayList<Rate> list) {
 		try {
 			int EndField;
@@ -446,11 +455,11 @@ public class JsonFile {
 			EndContent = Order.indexOf("*");
 			Endorder = Order.indexOf("#");
 			FilmName = Order.substring(EndField + 1, EndContent);
-			BufferedReader br = new BufferedReader(new FileReader("G:/Review.json"));
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(new FileInputStream("./Review.json"), "UTF8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				Rate jsonrate = gson.fromJson(line, Rate.class);
-				System.out.println(jsonrate.toString());
 				if (jsonrate.GetFilmName().equals(FilmName))
 					list.add(jsonrate);
 			}
@@ -458,6 +467,7 @@ public class JsonFile {
 			e.printStackTrace();
 		}
 	}
+
 	public void editmovie(String Order) {
 		Film film = new Film();
 		int EndField;
@@ -471,7 +481,7 @@ public class JsonFile {
 		ArrayList geners = new ArrayList<String>();
 		String MinuteContent = "";
 		String DirectorContent = "";
-		String descriptionContent="";
+		String descriptionContent = "";
 		EndField = Order.indexOf(":");
 		EndContent = Order.indexOf("*");
 		Endorder = Order.indexOf("#");
@@ -571,26 +581,27 @@ public class JsonFile {
 				fieldname = Order.substring(0, EndField);
 			}
 		}
-		film = new Film(NameContent, Integer.parseInt(YearContent), CountryContent, geners,  Integer.parseInt(MinuteContent), DirectorContent,descriptionContent);
-		System.out.println(film.toString());
-		ArrayList<Film> FilmList=new ArrayList<Film>();
+		film = new Film(NameContent, Integer.parseInt(YearContent), CountryContent, geners,
+				Integer.parseInt(MinuteContent), DirectorContent, descriptionContent);
+		ArrayList<Film> FilmList = new ArrayList<Film>();
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("G:/movies.json"));
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(new FileInputStream("./movies.json"), "UTF8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				Film jsonFilm = gson.fromJson(line, Film.class);
 				FilmList.add(jsonFilm);
 			}
-			File movies = new File("G:/movies.json");
+			File movies = new File("./movies.json");
 			PrintWriter cleaner = new PrintWriter(movies);
 			cleaner.print("");
 			cleaner.close();
 			BufferedWriter bwmovie = new BufferedWriter(new FileWriter(movies, true));
-			for(int i=0;i<FilmList.size();i++){
-				if(FilmList.get(i).getname().equals(identifier)){
+			for (int i = 0; i < FilmList.size(); i++) {
+				if (FilmList.get(i).getname().equals(identifier)) {
 					bwmovie.write(gson.toJson(film));
 					bwmovie.newLine();
-				}else{
+				} else {
 					bwmovie.write(gson.toJson(FilmList.get(i)));
 					bwmovie.newLine();
 				}
@@ -606,8 +617,9 @@ public class JsonFile {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
+
 	public String addmovie(String Order) {
 		Film film = new Film();
 		int EndField;
@@ -620,7 +632,7 @@ public class JsonFile {
 		ArrayList geners = new ArrayList<String>();
 		String MinuteContent = "";
 		String DirectorContent = "";
-		String descriptionContent="";
+		String descriptionContent = "";
 		EndField = Order.indexOf(":");
 		EndContent = Order.indexOf("*");
 		Endorder = Order.indexOf("#");
@@ -710,22 +722,22 @@ public class JsonFile {
 				fieldname = Order.substring(0, EndField);
 			}
 		}
-		film = new Film(NameContent, Integer.parseInt(YearContent), CountryContent, geners,  Integer.parseInt(MinuteContent), DirectorContent,descriptionContent);
-		System.out.println(film.toString());
-		String result="Adding Complete";
+		film = new Film(NameContent, Integer.parseInt(YearContent), CountryContent, geners,
+				Integer.parseInt(MinuteContent), DirectorContent, descriptionContent);
+		String result = "Adding Complete";
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("G:/movies.json"));
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(new FileInputStream("./movies.json"), "UTF8"));
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				Film jsonFilm = gson.fromJson(line, Film.class);
-				if(jsonFilm.getname().equals(film.getname()))
-					result="This Film was in the Database";
-					
+				if (jsonFilm.getname().equals(film.getname()))
+					result = "This Film was in the Database";
+
 			}
-			if (result.equals("completed")) {
-				File file = new File("G:/movies.json");
+			if (result.equals("Adding Complete")) {
+				File file = new File("./movies.json");
 				BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
-				System.out.println(gson.toJson(film));
 				bw.write(gson.toJson(film));
 				bw.newLine();
 				bw.close();
@@ -742,7 +754,8 @@ public class JsonFile {
 		}
 		return result;
 	}
-	public synchronized String AddRefree(String Order) {
+
+	public String AddRefree(String Order) {
 		int EndField;
 		int EndContent;
 		int Endorder;
@@ -764,13 +777,12 @@ public class JsonFile {
 		EndContent = Order.indexOf("*");
 		e_mail = Order.substring(EndField + 1, EndContent);
 		Order = Order.substring(EndContent + 1, Order.length());
-		System.out.println(username + " " + " " + password + " " + e_mail);
 		User newuser = new User(username, password, e_mail, "Refree");
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		String result = "completed";
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("G:/Users.json"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("./Users.json"), "UTF8"));
 			User jsonuser = new User();
 			String line = "";
 			while ((line = br.readLine()) != null) {
@@ -782,9 +794,8 @@ public class JsonFile {
 			}
 			/////////////////////////////////////////
 			if (result.equals("completed")) {
-				File file = new File("G:/Users.json");
+				File file = new File("./Users.json");
 				BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
-				System.out.println(gson.toJson(newuser));
 				bw.write(gson.toJson(newuser));
 				bw.newLine();
 				bw.close();
@@ -796,6 +807,7 @@ public class JsonFile {
 		return result;
 
 	}
+
 	public boolean GenerIsExist(List<String> list, ArrayList<String> RequestedGeners) {
 		for (int i = 0; i < list.size(); i++)
 			for (int j = 0; j < RequestedGeners.size(); j++)

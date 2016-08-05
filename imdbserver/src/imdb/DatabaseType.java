@@ -5,7 +5,7 @@ public class DatabaseType {
 	private String DataBase;
 	
 	public DatabaseType(){
-		DataBase="json";
+		DataBase="mysql";
 	}
 	
 	public String getDataBaseType(){
