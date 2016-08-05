@@ -24,9 +24,6 @@ public class ConnectToServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-       // in = new BufferedReader(
-        //        new InputStreamReader(socket.getInputStream()));
-       // out = new PrintWriter(socket.getOutputStream(), true);
         }
 	public Socket getsocket(){
 		return this.socket;

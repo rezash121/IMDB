@@ -53,7 +53,7 @@ public class MangerFrame extends JFrame {
 		Ratelist=new ArrayList<Rate>();
 		setTitle("IMDB");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 742, 384);
+		setBounds(100, 100, 775, 384);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -228,7 +228,7 @@ public class MangerFrame extends JFrame {
 		contentPane.add(searchbtn);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(207, 52, 506, 217);
+		scrollPane.setBounds(207, 52, 552, 217);
 		contentPane.add(scrollPane);
 		
 				list_1 = new JList();
@@ -237,6 +237,8 @@ public class MangerFrame extends JFrame {
 				DefaultListModel dlm=new DefaultListModel();
 				dlm.addElement("Results....");
 				list_1.setModel(dlm);
+				
+				
 
 
 		JComboBox comboBox = new JComboBox();
@@ -244,7 +246,7 @@ public class MangerFrame extends JFrame {
 		comboBox.setModel(
 				new DefaultComboBoxModel(new String[] { "Name", "Year", "Country", "Duration Minute", "Director" }));
 		comboBox.setToolTipText("");
-		comboBox.setBounds(278, 280, 86, 20);
+		comboBox.setBounds(281, 280, 86, 20);
 		contentPane.add(comboBox);
 
 		JLabel lblSortBy = new JLabel("Sort By:");
@@ -264,24 +266,24 @@ public class MangerFrame extends JFrame {
 			}
 		});
 		btnRate.setFont(new Font("Arial", Font.BOLD, 12));
-		btnRate.setBounds(489, 280, 95, 23);
+		btnRate.setBounds(522, 280, 95, 23);
 		contentPane.add(btnRate);
 
-		JButton btnNewButton = new JButton("Sort");
+		JButton btnNewButton = new JButton("Sort Ascending");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String SortType;
 				SortType=comboBox.getSelectedItem().toString();
 				if(SortType.equals("Name"))
-				Collections.sort(Filmlist, Film.FilmNameComparator);
+				Collections.sort(Filmlist, Film.FilmNameComparatorASC);
 				else if(SortType.equals("Year"))
-					Collections.sort(Filmlist, Film.FilmYearComparator);
+					Collections.sort(Filmlist, Film.FilmYearComparatorASC);
 				else if(SortType.equals("Country"))
-					Collections.sort(Filmlist, Film.FilmCountryComparator);
+					Collections.sort(Filmlist, Film.FilmCountryComparatorASC);
 				else if(SortType.equals("Duration Minute"))
-					Collections.sort(Filmlist, Film.FilmDurationMinuteComparator);
+					Collections.sort(Filmlist, Film.FilmDurationMinuteComparatorASC);
 				else if(SortType.equals("Director"))
-					Collections.sort(Filmlist, Film.FilmDirectorComparator);
+					Collections.sort(Filmlist, Film.FilmDirectorComparatorASC);
 				DefaultListModel listModel = (DefaultListModel) list_1.getModel();
 				listModel.removeAllElements();
 				DefaultListModel dlm = new DefaultListModel();
@@ -291,7 +293,7 @@ public class MangerFrame extends JFrame {
 			}
 		});
 		btnNewButton.setFont(new Font("Arial", Font.BOLD, 12));
-		btnNewButton.setBounds(393, 279, 86, 23);
+		btnNewButton.setBounds(374, 279, 132, 23);
 		contentPane.add(btnNewButton);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		JButton btnNewButton_1 = new JButton("Add New Movie");
@@ -304,22 +306,29 @@ public class MangerFrame extends JFrame {
 			}
 		});
 		btnNewButton_1.setFont(new Font("Arial", Font.BOLD, 12));
-		btnNewButton_1.setBounds(594, 279, 119, 23);
+		btnNewButton_1.setBounds(627, 280, 132, 23);
 		contentPane.add(btnNewButton_1);
 
 		JButton btnSignOut = new JButton("Sign Out");
+		btnSignOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				message="SignOut#UserName:"+UserName;
+				output.println(message);
+				System.exit(0);
+			}
+		});
 		btnSignOut.setFont(new Font("Arial", Font.BOLD, 12));
-		btnSignOut.setBounds(637, 6, 89, 23);
+		btnSignOut.setBounds(670, 6, 89, 23);
 		contentPane.add(btnSignOut);
 		
 		JLabel lblDatabaseType = new JLabel("DataBase Type:");
 		lblDatabaseType.setFont(new Font("Georgia", Font.PLAIN, 12));
-		lblDatabaseType.setBounds(190, 327, 95, 14);
+		lblDatabaseType.setBounds(195, 314, 95, 14);
 		contentPane.add(lblDatabaseType);
 		
 		JComboBox databasecomboBox = new JComboBox();
-		databasecomboBox.setModel(new DefaultComboBoxModel(new String[] {"Json", "SQL"}));
-		databasecomboBox.setBounds(285, 324, 79, 20);
+		databasecomboBox.setModel(new DefaultComboBoxModel(new String[] {"json", "sql"}));
+		databasecomboBox.setBounds(288, 311, 79, 20);
 		contentPane.add(databasecomboBox);
 		
 		JButton btnSwitchDatabase = new JButton("Switch Database");
@@ -330,7 +339,7 @@ public class MangerFrame extends JFrame {
 			}
 		});
 		btnSwitchDatabase.setFont(new Font("Arial", Font.BOLD, 12));
-		btnSwitchDatabase.setBounds(403, 322, 129, 23);
+		btnSwitchDatabase.setBounds(516, 314, 137, 23);
 		contentPane.add(btnSwitchDatabase);
 		
 		JButton btnAddRefree = new JButton("Add Refree");
@@ -341,8 +350,36 @@ public class MangerFrame extends JFrame {
 			}
 		});
 		btnAddRefree.setFont(new Font("Arial", Font.BOLD, 12));
-		btnAddRefree.setBounds(550, 322, 103, 23);
+		btnAddRefree.setBounds(656, 314, 103, 23);
 		contentPane.add(btnAddRefree);
+		
+		JButton btnNewButton_2 = new JButton("Sort Descending");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				String SortType;
+				SortType=comboBox.getSelectedItem().toString();
+				if(SortType.equals("Name"))
+				Collections.sort(Filmlist, Film.FilmNameComparatorDesc);
+				else if(SortType.equals("Year"))
+					Collections.sort(Filmlist, Film.FilmYearComparatorDesc);
+				else if(SortType.equals("Country"))
+					Collections.sort(Filmlist, Film.FilmCountryComparatorDesc);
+				else if(SortType.equals("Duration Minute"))
+					Collections.sort(Filmlist, Film.FilmDurationMinuteComparatorDesc);
+				else if(SortType.equals("Director"))
+					Collections.sort(Filmlist, Film.FilmDirectorComparatorDesc);
+				DefaultListModel listModel = (DefaultListModel) list_1.getModel();
+				listModel.removeAllElements();
+				DefaultListModel dlm = new DefaultListModel();
+				for (int i = 0; i < Filmlist.size(); i++)
+					dlm.addElement(Filmlist.get(i).toString());
+				list_1.setModel(dlm);
+			}
+		});
+		btnNewButton_2.setFont(new Font("Arial", Font.BOLD, 12));
+		btnNewButton_2.setBounds(374, 313, 132, 23);
+		contentPane.add(btnNewButton_2);
 	}
 
 	public boolean TheCheckBoxesIsSelected(JCheckBox ComedyChBox, JCheckBox DramaChBox, JCheckBox ShortChBox,

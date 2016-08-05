@@ -60,6 +60,14 @@ public class RefreeFrame extends JFrame {
 		list.setModel(dlm);
 		
 		JButton signoutbtn = new JButton("Sign out");
+		signoutbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				message="SignOut#UserName:"+refreename;
+				output.println(message);
+				System.exit(0);
+				
+			}
+		});
 		signoutbtn.setFont(new Font("Arial", Font.BOLD, 12));
 		signoutbtn.setBounds(482, 11, 89, 23);
 		contentPane.add(signoutbtn);

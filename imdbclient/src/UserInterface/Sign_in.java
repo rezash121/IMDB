@@ -92,7 +92,7 @@ public class Sign_in extends JFrame {
 				else {
 					output.println("signin#username:" + usernametxtfld.getText() + "*password:"
 							+ passwordField.getText() + "*#");
-				}
+				
 				try {
 					response = (Response) objectIn.readObject();
 				} catch (ClassNotFoundException e) {
@@ -118,6 +118,7 @@ public class Sign_in extends JFrame {
 					MF.setVisible(true);
 				}else
 					JOptionPane.showMessageDialog(null, "Username or Password Are Incorrect");
+				}
 
 			}
 		});

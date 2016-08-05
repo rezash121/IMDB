@@ -53,7 +53,7 @@ public class OrdinaryUserPage extends JFrame {
 		Ratelist=new ArrayList<Rate>();
 		setTitle("IMDB");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 742, 367);
+		setBounds(100, 100, 742, 380);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -264,24 +264,24 @@ public class OrdinaryUserPage extends JFrame {
 			}
 		});
 		btnRate.setFont(new Font("Arial", Font.BOLD, 12));
-		btnRate.setBounds(513, 279, 95, 23);
+		btnRate.setBounds(520, 279, 95, 23);
 		contentPane.add(btnRate);
 
-		JButton btnNewButton = new JButton("Sort");
+		JButton btnNewButton = new JButton("Sort Ascending");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String SortType;
 				SortType=comboBox.getSelectedItem().toString();
 				if(SortType.equals("Name"))
-				Collections.sort(Filmlist, Film.FilmNameComparator);
+				Collections.sort(Filmlist, Film.FilmNameComparatorASC);
 				else if(SortType.equals("Year"))
-					Collections.sort(Filmlist, Film.FilmYearComparator);
+					Collections.sort(Filmlist, Film.FilmYearComparatorASC);
 				else if(SortType.equals("Country"))
-					Collections.sort(Filmlist, Film.FilmCountryComparator);
+					Collections.sort(Filmlist, Film.FilmCountryComparatorASC);
 				else if(SortType.equals("Duration Minute"))
-					Collections.sort(Filmlist, Film.FilmDurationMinuteComparator);
+					Collections.sort(Filmlist, Film.FilmDurationMinuteComparatorASC);
 				else if(SortType.equals("Director"))
-					Collections.sort(Filmlist, Film.FilmDirectorComparator);
+					Collections.sort(Filmlist, Film.FilmDirectorComparatorASC);
 				DefaultListModel listModel = (DefaultListModel) list_1.getModel();
 				listModel.removeAllElements();
 				DefaultListModel dlm = new DefaultListModel();
@@ -291,7 +291,7 @@ public class OrdinaryUserPage extends JFrame {
 			}
 		});
 		btnNewButton.setFont(new Font("Arial", Font.BOLD, 12));
-		btnNewButton.setBounds(408, 280, 95, 23);
+		btnNewButton.setBounds(368, 280, 142, 23);
 		contentPane.add(btnNewButton);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 		JButton btnNewButton_1 = new JButton("Reviews");
@@ -341,9 +341,44 @@ public class OrdinaryUserPage extends JFrame {
 		contentPane.add(btnNewButton_1);
 
 		JButton btnSignOut = new JButton("Sign Out");
+		btnSignOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				message="SignOut#UserName:"+UserName;
+				output.println(message);
+				System.exit(0);
+			}
+		});
 		btnSignOut.setFont(new Font("Arial", Font.BOLD, 12));
 		btnSignOut.setBounds(637, 6, 89, 23);
 		contentPane.add(btnSignOut);
+		
+		JButton btnNewButton_2 = new JButton("Sort Descending");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String SortType;
+				SortType=comboBox.getSelectedItem().toString();
+				if(SortType.equals("Name"))
+				Collections.sort(Filmlist, Film.FilmNameComparatorDesc);
+				else if(SortType.equals("Year"))
+					Collections.sort(Filmlist, Film.FilmYearComparatorDesc);
+				else if(SortType.equals("Country"))
+					Collections.sort(Filmlist, Film.FilmCountryComparatorDesc);
+				else if(SortType.equals("Duration Minute"))
+					Collections.sort(Filmlist, Film.FilmDurationMinuteComparatorDesc);
+				else if(SortType.equals("Director"))
+					Collections.sort(Filmlist, Film.FilmDirectorComparatorDesc);
+				DefaultListModel listModel = (DefaultListModel) list_1.getModel();
+				listModel.removeAllElements();
+				DefaultListModel dlm = new DefaultListModel();
+				for (int i = 0; i < Filmlist.size(); i++)
+					dlm.addElement(Filmlist.get(i).toString());
+				list_1.setModel(dlm);
+				
+			}
+		});
+		btnNewButton_2.setFont(new Font("Arial", Font.BOLD, 12));
+		btnNewButton_2.setBounds(368, 314, 142, 23);
+		contentPane.add(btnNewButton_2);
 	}
 
 	public boolean TheCheckBoxesIsSelected(JCheckBox ComedyChBox, JCheckBox DramaChBox, JCheckBox ShortChBox,
