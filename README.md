@@ -1,5 +1,2 @@
 # Movie management system
-This project is a simulation of the IMDB server.\
-rating system\
-movies information\
-client and server
+We developed a client and server for a movie management system. Both client and server are developed with socket programming.
